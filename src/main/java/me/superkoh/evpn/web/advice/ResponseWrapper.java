@@ -1,6 +1,7 @@
 package me.superkoh.evpn.web.advice;
 
-import me.superkoh.evpn.web.response.BaseResponse;
+import me.superkoh.evpn.web.response.ErrorResponse;
+import me.superkoh.evpn.web.response.SuccessResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
@@ -22,8 +23,11 @@ public class ResponseWrapper implements ResponseBodyAdvice {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class selectedConverterType, ServerHttpRequest request,
                                   ServerHttpResponse response) {
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.obj = body;
-        return baseResponse;
+        if (body instanceof ErrorResponse) {
+            return body;
+        }
+        SuccessResponse successResponse = new SuccessResponse();
+        successResponse.obj = body;
+        return successResponse;
     }
 }

@@ -1,7 +1,8 @@
-package me.superkoh.evpn.web;
+package me.superkoh.evpn.web.controller;
 
 import me.superkoh.evpn.domain.entity.Banner;
 import me.superkoh.evpn.domain.entity.Server;
+import me.superkoh.evpn.exception.BizException;
 import me.superkoh.evpn.service.VpnService;
 import me.superkoh.evpn.web.response.ConfigResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,14 @@ import java.util.stream.Collectors;
  * Created by KOH on 16/4/17.
  */
 @RestController
-public class Controller {
+public class VpnController extends BaseController {
 
     @Autowired
     private VpnService vpnService;
 
     @RequestMapping(path = "/config.php")
-    public ConfigResponse config() {
+    public ConfigResponse config() throws BizException {
+        if (true) throw new BizException(100, "abc");
         List<Server> serverList = vpnService.getServerList();
         List<Banner> bannerList = vpnService.getBannerList();
         ConfigResponse response = new ConfigResponse();
@@ -31,4 +33,5 @@ public class Controller {
                 .collect(Collectors.toList()));
         return response;
     }
+
 }

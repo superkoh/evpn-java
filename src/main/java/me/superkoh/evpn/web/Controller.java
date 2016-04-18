@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by KOH on 16/4/17.
@@ -24,12 +25,10 @@ public class Controller {
         List<Server> serverList = vpnService.getServerList();
         List<Banner> bannerList = vpnService.getBannerList();
         ConfigResponse response = new ConfigResponse();
-        for (Server server : serverList) {
-            response.servers.add(new ConfigResponse.ServerResponse(server));
-        }
-        for (Banner banner : bannerList) {
-            response.ads.add(new ConfigResponse.BannerResponse(banner));
-        }
+        response.servers.addAll(serverList.stream().map(ConfigResponse.ServerResponse::new)
+                .collect(Collectors.toList()));
+        response.ads.addAll(bannerList.stream().map(ConfigResponse.BannerResponse::new)
+                .collect(Collectors.toList()));
         return response;
     }
 }

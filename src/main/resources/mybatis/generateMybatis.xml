@@ -59,5 +59,15 @@
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
         </table>
 
+        <table tableName="evpn_user" domainObjectName="EVpnUser" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+        </table>
+
+        <table tableName="evpn_invite_code" domainObjectName="EVpnInviteCode" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+        </table>
+
     </context>
 </generatorConfiguration>

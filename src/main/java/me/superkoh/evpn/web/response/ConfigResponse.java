@@ -2,6 +2,7 @@ package me.superkoh.evpn.web.response;
 
 import me.superkoh.evpn.domain.entity.Banner;
 import me.superkoh.evpn.domain.entity.Server;
+import me.superkoh.evpn.service.entitiy.UserTrafficInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class ConfigResponse {
     public List<BannerResponse> ads = new ArrayList<>();
     public boolean needUpdate = false;
     public String updateInfo = "";
+    public UserTrafficInfo trafficInfo;
 
     public static class ServerResponse {
         public String ip;

@@ -3,20 +3,34 @@ package me.superkoh.evpn.exception;
 /**
  * Created by KOH on 16/4/19.
  */
-public class BizException extends Exception {
+public class BizException extends RuntimeException {
 
-    protected int errorCode = -1;
+    private int errCode = -1;
+    private String errMsg = "";
+
+    public int getErrCode() {
+        return errCode;
+    }
+
+    public void setErrCode(int errCode) {
+        this.errCode = errCode;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
 
     public BizException() {
-        super("系统错误,请稍后重试");
+        super();
     }
 
-    public BizException(int errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public int getErrorCode() {
-        return errorCode;
+    public BizException(int errCode, String errMsg) {
+        super();
+        this.errCode = errCode;
+        this.errMsg = errMsg;
     }
 }

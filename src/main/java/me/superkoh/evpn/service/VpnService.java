@@ -91,9 +91,8 @@ public class VpnService {
         return bannerList;
     }
 
-    public boolean isTrafficOverLimit(String username) {
-        Long usage = myRadAcctMapper.selectMonthlyTrafficUsage(username);
-        return null != usage && usage > MONTHLY_TRAFFIC_LIMIT;
+    public boolean isTrafficOverLimit(EVpnUser user) {
+        return getRemainTraffic(user).getRemainTraffic() == 0;
     }
 
     public RadCheck getUserAuthByName(String username) {
@@ -191,24 +190,32 @@ public class VpnService {
 
     @Transactional(readOnly = true)
     public UserTrafficInfo getRemainTraffic(String username) {
-        Date now = new Date();
         EVpnUser user = this.getVpnUser(username);
+        return _getRemainTraffic(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserTrafficInfo getRemainTraffic(EVpnUser user) {
+        return _getRemainTraffic(user);
+    }
+
+    private UserTrafficInfo _getRemainTraffic(EVpnUser user) {
+        Date now = new Date();
         UserTrafficInfo trafficInfo = new UserTrafficInfo();
+        trafficInfo.setTotalTraffic(INIT_MONTHLY_TRAFFIC_LIMIT);
         if (null == user) {
-            trafficInfo.totalTraffic = INIT_MONTHLY_TRAFFIC_LIMIT;
-            trafficInfo.remainTraffic = INIT_MONTHLY_TRAFFIC_LIMIT;
+            trafficInfo.setRemainTraffic(INIT_MONTHLY_TRAFFIC_LIMIT);
             return trafficInfo;
         }
-        trafficInfo.totalTraffic = INIT_MONTHLY_TRAFFIC_LIMIT;
         if (user.getAwardEndDate().compareTo(now) > 0) {
-            trafficInfo.totalTraffic += user.getAwardTraffic();
+            trafficInfo.setTotalTraffic(trafficInfo.getTotalTraffic() + user.getAwardTraffic());
         }
-        Long usage = myRadAcctMapper.selectMonthlyTrafficUsage(username);
+        Long usage = myRadAcctMapper.selectMonthlyTrafficUsage(user.getUsername());
         if (null == usage) {
             usage = 0L;
         }
-        trafficInfo.remainTraffic = trafficInfo.totalTraffic - usage;
-        if (trafficInfo.remainTraffic < 0) trafficInfo.remainTraffic = 0;
+        trafficInfo.setRemainTraffic(trafficInfo.getTotalTraffic() - usage);
+        if (trafficInfo.getRemainTraffic() < 0) trafficInfo.setRemainTraffic(0);
         return trafficInfo;
     }
 }

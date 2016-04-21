@@ -16,7 +16,7 @@ public class ConfigResponse {
     public List<BannerResponse> ads = new ArrayList<>();
     public boolean needUpdate = false;
     public String updateInfo = "";
-    public UserTrafficInfo trafficInfo;
+    public UserTrafficInfoResponse trafficInfo;
 
     public static class ServerResponse {
         public String ip;
@@ -37,6 +37,16 @@ public class ConfigResponse {
         public BannerResponse(Banner banner) {
             this.asset = banner.getAsset();
             this.link = banner.getLink();
+        }
+    }
+
+    public static class UserTrafficInfoResponse {
+        public long remainTraffic;
+        public long totalTraffic;
+
+        public UserTrafficInfoResponse(UserTrafficInfo info) {
+            this.remainTraffic = info.getRemainTraffic();
+            this.totalTraffic = info.getTotalTraffic();
         }
     }
 }

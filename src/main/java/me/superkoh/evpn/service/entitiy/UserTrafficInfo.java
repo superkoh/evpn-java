@@ -5,6 +5,22 @@ package me.superkoh.evpn.service.entitiy;
  */
 public class UserTrafficInfo {
 
-    public long remainTraffic;
-    public long totalTraffic;
+    private long remainTraffic;
+    private long totalTraffic;
+
+    public long getRemainTraffic() {
+        return remainTraffic;
+    }
+
+    public void setRemainTraffic(long remainTraffic) {
+        this.remainTraffic = remainTraffic;
+    }
+
+    public long getTotalTraffic() {
+        return totalTraffic;
+    }
+
+    public void setTotalTraffic(long totalTraffic) {
+        this.totalTraffic = totalTraffic;
+    }
 }

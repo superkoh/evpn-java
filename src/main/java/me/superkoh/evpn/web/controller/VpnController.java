@@ -5,6 +5,7 @@ import me.superkoh.evpn.domain.entity.Server;
 import me.superkoh.evpn.domain.model.EVpnUser;
 import me.superkoh.evpn.domain.model.RadCheck;
 import me.superkoh.evpn.exception.BizException;
+import me.superkoh.evpn.exception.IllegalRequestParamException;
 import me.superkoh.evpn.exception.MonthlyTrafficOverLimitException;
 import me.superkoh.evpn.service.VpnService;
 import me.superkoh.evpn.service.entitiy.UserTrafficInfo;
@@ -22,16 +23,16 @@ import java.util.stream.Collectors;
  * Created by KOH on 16/4/17.
  */
 @RestController
-public class VpnController extends BaseController {
+public class VpnController {
 
     @Autowired
     private VpnService vpnService;
 
     @RequestMapping(path = "/config.php")
-    public ConfigResponse config(HttpServletRequest request) throws BizException {
+    public ConfigResponse config(HttpServletRequest request) throws Exception {
         String username = request.getParameter("vd");
         if (null == username || username.isEmpty()) {
-            throw new IllegalArgumentException("vd is null");
+            throw new IllegalRequestParamException("vd");
         }
         List<Server> serverList = vpnService.getServerList();
         List<Banner> bannerList = vpnService.getBannerList();
@@ -41,7 +42,7 @@ public class VpnController extends BaseController {
                 .collect(Collectors.toList()));
         response.ads.addAll(bannerList.stream().map(ConfigResponse.BannerResponse::new)
                 .collect(Collectors.toList()));
-        response.trafficInfo = trafficInfo;
+        response.trafficInfo = new ConfigResponse.UserTrafficInfoResponse(trafficInfo);
         return response;
     }
 
@@ -49,15 +50,15 @@ public class VpnController extends BaseController {
     public ConnectAuthResponse connect(HttpServletRequest request) throws Exception {
         String username = request.getParameter("vd");
         if (null == username || username.isEmpty()) {
-            throw new IllegalArgumentException("vd is null");
+            throw new IllegalRequestParamException("vd");
         }
         EVpnUser eVpnUser = vpnService.getVpnUser(username);
         if (null == eVpnUser) {
-            vpnService.createEVpnUser(username);
+            eVpnUser = vpnService.createEVpnUser(username);
         }
         RadCheck radCheck = vpnService.getUserAuthByName(username);
         if (null != radCheck) {
-            if (vpnService.isTrafficOverLimit(username)) {
+            if (vpnService.isTrafficOverLimit(eVpnUser)) {
                 throw new MonthlyTrafficOverLimitException();
             }
             return new ConnectAuthResponse(radCheck);

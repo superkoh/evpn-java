@@ -4,7 +4,6 @@ import me.superkoh.evpn.domain.entity.Banner;
 import me.superkoh.evpn.domain.entity.Server;
 import me.superkoh.evpn.domain.model.EVpnUser;
 import me.superkoh.evpn.domain.model.RadCheck;
-import me.superkoh.evpn.domain.model.UserInfo;
 import me.superkoh.evpn.exception.BizException;
 import me.superkoh.evpn.exception.MonthlyTrafficOverLimitException;
 import me.superkoh.evpn.service.VpnService;
@@ -36,10 +35,6 @@ public class VpnController extends BaseController {
         }
         List<Server> serverList = vpnService.getServerList();
         List<Banner> bannerList = vpnService.getBannerList();
-        EVpnUser eVpnUser = vpnService.getVpnUser(username);
-        if (null == eVpnUser) {
-            vpnService.createEVpnUser(username);
-        }
         UserTrafficInfo trafficInfo = vpnService.getRemainTraffic(username);
         ConfigResponse response = new ConfigResponse();
         response.servers.addAll(serverList.stream().map(ConfigResponse.ServerResponse::new)

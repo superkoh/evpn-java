@@ -194,6 +194,11 @@ public class VpnService {
         Date now = new Date();
         EVpnUser user = this.getVpnUser(username);
         UserTrafficInfo trafficInfo = new UserTrafficInfo();
+        if (null == user) {
+            trafficInfo.totalTraffic = INIT_MONTHLY_TRAFFIC_LIMIT;
+            trafficInfo.remainTraffic = INIT_MONTHLY_TRAFFIC_LIMIT;
+            return trafficInfo;
+        }
         trafficInfo.totalTraffic = INIT_MONTHLY_TRAFFIC_LIMIT;
         if (user.getAwardEndDate().compareTo(now) > 0) {
             trafficInfo.totalTraffic += user.getAwardTraffic();

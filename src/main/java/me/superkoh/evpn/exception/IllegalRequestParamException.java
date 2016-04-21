@@ -6,7 +6,6 @@ package me.superkoh.evpn.exception;
 public class IllegalRequestParamException extends BizException {
 
     public IllegalRequestParamException(String paramName) {
-        this.setErrCode(-1);
-        this.setErrMsg(paramName + " is invalid");
+        super(-1, paramName + " is invalid");
     }
 }

@@ -1,4 +1,4 @@
-package me.superkoh.evpn.web.response;
+package me.superkoh.evpn.api.response;
 
 import me.superkoh.evpn.domain.entity.Banner;
 import me.superkoh.evpn.domain.entity.Server;

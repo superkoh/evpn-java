@@ -1,7 +1,7 @@
-package me.superkoh.evpn.web.advice;
+package me.superkoh.evpn.api.advice;
 
 import me.superkoh.evpn.exception.BizException;
-import me.superkoh.evpn.web.response.ErrorResponse;
+import me.superkoh.evpn.api.response.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;

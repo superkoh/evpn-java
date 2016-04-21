@@ -1,16 +1,15 @@
-package me.superkoh.evpn.web.controller;
+package me.superkoh.evpn.api.controller;
 
 import me.superkoh.evpn.domain.entity.Banner;
 import me.superkoh.evpn.domain.entity.Server;
 import me.superkoh.evpn.domain.model.EVpnUser;
 import me.superkoh.evpn.domain.model.RadCheck;
-import me.superkoh.evpn.exception.BizException;
 import me.superkoh.evpn.exception.IllegalRequestParamException;
 import me.superkoh.evpn.exception.MonthlyTrafficOverLimitException;
 import me.superkoh.evpn.service.VpnService;
 import me.superkoh.evpn.service.entitiy.UserTrafficInfo;
-import me.superkoh.evpn.web.response.ConfigResponse;
-import me.superkoh.evpn.web.response.ConnectAuthResponse;
+import me.superkoh.evpn.api.response.ConfigResponse;
+import me.superkoh.evpn.api.response.ConnectAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

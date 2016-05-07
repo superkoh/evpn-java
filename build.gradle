@@ -31,11 +31,13 @@ dependencies {
     compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.0.2')
     compile('org.springframework.boot:spring-boot-starter-aop:1.3.3.RELEASE')
     compile('commons-codec:commons-codec:1.10')
+    compile('com.zaxxer:HikariCP:2.4.6')
+    compile('ch.qos.logback:logback-classic:1.1.7')
     testCompile('org.springframework.boot:spring-boot-starter-test:1.3.3.RELEASE')
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '2.13'
 }
 
 task mybatisGenerator(type: MybatisGeneratorTask) {
@@ -52,11 +54,19 @@ class MybatisGeneratorTask extends DefaultTask {
     public void run() {
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
-        File configFile = new File("/Users/KOH/Sites/evpn-java/src/main/resources/mybatis/generateMybatis.xml");
+
+        File configFile = new File("/Users/KOH/Sites/evpn-java/src/main/resources/mybatis/radiusGenerator.xml");
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
         DefaultShellCallback callback = new DefaultShellCallback(overwrite);
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+        myBatisGenerator.generate(null);
+
+        configFile = new File("/Users/KOH/Sites/evpn-java/src/main/resources/mybatis/evpnGenerator.xml");
+        cp = new ConfigurationParser(warnings);
+        config = cp.parseConfiguration(configFile);
+        callback = new DefaultShellCallback(overwrite);
+        myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
         myBatisGenerator.generate(null);
     }
 }

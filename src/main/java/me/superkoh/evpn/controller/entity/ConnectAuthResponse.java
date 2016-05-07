@@ -1,4 +1,4 @@
-package me.superkoh.evpn.controller.rest.entity;
+package me.superkoh.evpn.controller.entity;
 
 
 import me.superkoh.evpn.domain.model.radius.RadCheck;

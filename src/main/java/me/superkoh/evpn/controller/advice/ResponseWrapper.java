@@ -1,7 +1,7 @@
 package me.superkoh.evpn.controller.advice;
 
-import me.superkoh.evpn.controller.rest.entity.ErrorResponse;
-import me.superkoh.evpn.controller.rest.entity.SuccessResponse;
+import me.superkoh.evpn.controller.base.ErrorResponse;
+import me.superkoh.evpn.controller.base.SuccessResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;

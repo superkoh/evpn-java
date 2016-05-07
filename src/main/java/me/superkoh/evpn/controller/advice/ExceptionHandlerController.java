@@ -1,7 +1,8 @@
 package me.superkoh.evpn.controller.advice;
 
+
+import me.superkoh.evpn.controller.base.ErrorResponse;
 import me.superkoh.evpn.exception.BizException;
-import me.superkoh.evpn.controller.rest.entity.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,7 +18,8 @@ public class ExceptionHandlerController {
     Logger logger = LoggerFactory.getLogger(ExceptionHandlerController.class);
 
     @ExceptionHandler(BizException.class)
-    public @ResponseBody ErrorResponse bizExceptionHandler(BizException e) {
+    public @ResponseBody
+    ErrorResponse bizExceptionHandler(BizException e) {
         ErrorResponse res = new ErrorResponse();
         res.ok = e.getErrCode();
         res.msg = e.getErrMsg();

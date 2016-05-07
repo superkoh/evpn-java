@@ -1,7 +1,7 @@
-package me.superkoh.evpn.controller.rest;
+package me.superkoh.evpn.controller;
 
-import me.superkoh.evpn.controller.rest.entity.ConfigResponse;
-import me.superkoh.evpn.controller.rest.entity.ConnectAuthResponse;
+import me.superkoh.evpn.controller.entity.ConfigResponse;
+import me.superkoh.evpn.controller.entity.ConnectAuthResponse;
 import me.superkoh.evpn.domain.model.evpn.Banner;
 import me.superkoh.evpn.domain.model.radius.Nas;
 import me.superkoh.evpn.domain.model.radius.RadCheck;

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by KOH on 16/5/4.
  */
-public interface BaseMapperWithBLOBs<R, RE, K> extends BaseMapper<R, RE, K> {
+public interface BaseMapperWithBlobs<R, RE, K> extends BaseMapper<R, RE, K> {
 
     List<R> selectByExampleWithBLOBs(RE example);
 

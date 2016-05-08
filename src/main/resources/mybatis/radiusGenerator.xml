@@ -8,9 +8,9 @@
 
     <context id="MySQLTables" targetRuntime="MyBatis3">
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://159.203.214.153:3306/radius"
-                        userId="root"
-                        password="1q2w3e4r5">
+                        connectionURL="jdbc:mysql://10.211.55.6:3306/radius"
+                        userId="radius"
+                        password="1q2w3E4R5@@">
         </jdbcConnection>
 
         <javaTypeResolver >

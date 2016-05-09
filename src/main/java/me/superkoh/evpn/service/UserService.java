@@ -25,7 +25,7 @@ public class UserService {
     public RadCheck createNewConnInfo(String vd) {
         RadCheck radCheck = new RadCheck();
         radCheck.setUsername(vd);
-        radCheck.setAttribute("User-Password");
+        radCheck.setAttribute("Cleartext-Password");
         radCheck.setOp(":=");
         radCheck.setValue(DigestUtils.md5Hex(vd));
         radCheckMapper.insert(radCheck);

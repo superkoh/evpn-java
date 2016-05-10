@@ -9,11 +9,15 @@ import me.superkoh.evpn.exception.IllegalRequestParamException;
 import me.superkoh.evpn.service.BannerService;
 import me.superkoh.evpn.service.NasService;
 import me.superkoh.evpn.service.UserService;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
  */
 @RestController
 public class VpnController {
+
+    public static final Logger logger = LoggerFactory.getLogger(VpnController.class);
 
     @Autowired
     private UserService userService;
@@ -62,6 +68,12 @@ public class VpnController {
         } else {
             return new ConnectAuthResponse(radCheck);
         }
+    }
+
+    @RequestMapping(path = "/notify.php")
+    public String weidianCallback(HttpServletRequest request) throws IOException {
+        logger.info(IOUtils.toString(request.getInputStream(), "utf8"));
+        return "ok";
     }
 
 }

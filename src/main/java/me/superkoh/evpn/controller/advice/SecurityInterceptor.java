@@ -15,7 +15,6 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
             Exception {
-        System.out.println("***************");
         String eAuth = request.getHeader("eAuth");
         if (null == eAuth || !eAuth.equals(E_AUTH)) {
             response.sendError(403, "Permission Denied");

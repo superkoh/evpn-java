@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,9 +72,10 @@ public class VpnController {
     }
 
     @RequestMapping(path = "/notify.php")
-    public String weidianCallback(HttpServletRequest request) throws IOException {
-        logger.info(IOUtils.toString(request.getInputStream(), "utf8"));
-        return "ok";
+    public List<String> weidianCallback(HttpServletRequest request) throws IOException {
+        String s = IOUtils.toString(request.getInputStream(), "utf8");
+        logger.info(s);
+        return Collections.singletonList(s);
     }
 
 }

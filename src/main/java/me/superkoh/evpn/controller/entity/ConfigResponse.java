@@ -35,9 +35,9 @@ public class ConfigResponse {
     public static class BannerResponse {
         public String asset;
         public String link;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        @JsonFormat(shape = JsonFormat.Shape.NUMBER, timezone = "GMT+8")
         public Date onlineTime;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        @JsonFormat(shape = JsonFormat.Shape.NUMBER, timezone = "GMT+8")
         public Date offlineTime;
 
         public BannerResponse(Banner banner) {

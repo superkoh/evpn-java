@@ -14,8 +14,8 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'evpn-service'
-    version =  '1.0.0'
+    baseName = 'evpn'
+    version =  'release'
 }
 
 repositories {

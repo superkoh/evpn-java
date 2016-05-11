@@ -9,7 +9,6 @@ import me.superkoh.evpn.exception.IllegalRequestParamException;
 import me.superkoh.evpn.service.BannerService;
 import me.superkoh.evpn.service.NasService;
 import me.superkoh.evpn.service.UserService;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +74,7 @@ public class VpnController {
     public List<String> weidianCallback(HttpServletRequest request) throws IOException {
         String content = request.getParameter("content");
         logger.info(content);
-        return Collections.singletonList(s);
+        return Collections.singletonList("ok");
     }
 
 }

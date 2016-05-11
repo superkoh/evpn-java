@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 start() {
-    PIDS = `ps aux|grep "evpn-release"|grep -v "grep"|awk '{print $2}'`;
+    PIDS=`ps aux|grep "evpn-release"|grep -v "grep"|awk '{print $2}'`;
     if [[ ! -z PIDS ]];
         then
             stop
@@ -10,7 +10,7 @@ start() {
 }
 
 stop() {
-    PIDS = `ps aux|grep "evpn-release"|grep -v "grep"|awk '{print $2}'`;
+    PIDS=`ps aux|grep "evpn-release"|grep -v "grep"|awk '{print $2}'`;
     if [[ -z PIDS ]];
         then
             echo "no service running"

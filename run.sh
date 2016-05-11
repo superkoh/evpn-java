@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-nohup /root/deps/jdk1.8.0_92/bin/java -Duser.timezone=CST -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active="prod" -Denv="prod" -jar build/libs/evpn-service-1.0.0.jar > /dev/null 2>&1 &
+nohup /root/deps/jdk1.8.0_92/bin/java -Duser.timezone="Asia/Shanghai" -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active="prod" -Denv="prod" -jar build/libs/evpn-service-1.0.0.jar > /dev/null 2>&1 &

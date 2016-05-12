@@ -13,10 +13,11 @@ import me.superkoh.evpn.domain.model.evpn.VipUserToken;
 import me.superkoh.evpn.domain.model.radius.RadCheck;
 import me.superkoh.evpn.exception.BizException;
 import me.superkoh.evpn.service.entity.VipUserWithToken;
-import me.superkoh.evpn.service.model.sms.SmsService;
+import me.superkoh.evpn.service.base.SmsService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
@@ -54,6 +55,7 @@ public class UserService {
     private ObjectMapper objectMapper;
 
     @Autowired
+    @Qualifier("yunpianSmsService")
     private SmsService smsService;
 
     @Transactional(readOnly = true, transactionManager = "radiusTransactionManager")

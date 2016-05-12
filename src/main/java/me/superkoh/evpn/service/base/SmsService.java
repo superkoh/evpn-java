@@ -1,4 +1,4 @@
-package me.superkoh.evpn.service.model.sms;
+package me.superkoh.evpn.service.base;
 
 /**
  * Created by KOH on 16/5/12.

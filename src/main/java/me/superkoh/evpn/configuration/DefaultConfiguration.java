@@ -1,7 +1,5 @@
 package me.superkoh.evpn.configuration;
 
-import me.superkoh.evpn.service.model.sms.SmsService;
-import me.superkoh.evpn.service.model.sms.YunpianSmsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -13,12 +11,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 @EnableAsync
 public class DefaultConfiguration {
-
-    @Bean
-    public SmsService smsService() {
-        SmsService smsService = new YunpianSmsService();
-        return smsService;
-    }
 
     @Bean(name = "defaultTaskExecutor")
     public ThreadPoolTaskExecutor defaultTaskExecutor() {

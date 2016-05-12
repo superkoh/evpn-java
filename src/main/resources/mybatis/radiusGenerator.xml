@@ -20,6 +20,7 @@
         <javaModelGenerator targetPackage="me.superkoh.evpn.domain.model.radius" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
+            <property name="rootClass" value="me.superkoh.evpn.domain.base.BaseRecord"/>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="me.superkoh.evpn.domain.mapper.radius"  targetProject="src/main/resources">

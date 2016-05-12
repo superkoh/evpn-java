@@ -1,7 +1,7 @@
 <configuration>
 
 
-    <springProfile name="prod">
+    <springProfile name="prod,dev">
 
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>/var/log/evpn/info.log</file>
@@ -20,6 +20,28 @@
                 <pattern>%d{HH:mm:ss.SSS, Asia/Shanghai} [%-10.10thread][%-5.5level] %msg [%logger{36}]%n</pattern>
             </encoder>
         </appender>
+
+        <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/var/log/evpn/access.log</file>
+            <prudent>true</prudent>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- daily rollover -->
+                <fileNamePattern>/var/log/evpn/access.%d{yyyy-MM-dd, Asia/Shanghai}.log</fileNamePattern>
+
+                <!-- keep 30 days' worth of history -->
+                <maxHistory>10</maxHistory>
+
+            </rollingPolicy>
+            <!-- encoders are assigned the type
+                 ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS, Asia/Shanghai} [%-10.10thread] %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="accessLogger" level="INFO">
+            <appender-ref ref="ACCESS_FILE"/>
+        </logger>
 
         <root level="INFO">
             <appender-ref ref="FILE"/>

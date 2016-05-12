@@ -1,14 +1,17 @@
 package me.superkoh.evpn.controller;
 
+import me.superkoh.evpn.controller.base.EmptyResponse;
 import me.superkoh.evpn.controller.entity.ConfigResponse;
 import me.superkoh.evpn.controller.entity.ConnectAuthResponse;
+import me.superkoh.evpn.controller.entity.VipUserInfoResponse;
 import me.superkoh.evpn.domain.model.evpn.Banner;
+import me.superkoh.evpn.domain.model.evpn.VipUser;
 import me.superkoh.evpn.domain.model.radius.Nas;
-import me.superkoh.evpn.domain.model.radius.RadCheck;
 import me.superkoh.evpn.exception.IllegalRequestParamException;
 import me.superkoh.evpn.service.BannerService;
 import me.superkoh.evpn.service.NasService;
 import me.superkoh.evpn.service.UserService;
+import me.superkoh.evpn.service.entity.VipUserWithToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +43,7 @@ public class VpnController {
     private BannerService bannerService;
 
     @RequestMapping(path = "/config.php")
-    public ConfigResponse config() throws Exception {
+    public ConfigResponse config(HttpServletRequest request) throws Exception {
         List<Nas> nasList = nasService.getAllNasList();
         Map<String, Integer> nasConnectCount = nasService.getNasConnectCount();
         List<Banner> bannerList = bannerService.getBannerList();
@@ -54,20 +57,18 @@ public class VpnController {
         }
         response.ads.addAll(bannerList.stream().map(ConfigResponse.BannerResponse::new)
                 .collect(Collectors.toList()));
+        VipUser user = (VipUser) request.getAttribute("curUser");
+        if (null != user) {
+            response.userInfo = new VipUserInfoResponse(user, String.valueOf(request.getAttribute("curUserToken")));
+        }
         return response;
     }
 
     @RequestMapping(path = "/connect.php")
-    public ConnectAuthResponse connect(String vd, HttpServletRequest request) throws Exception {
-        if (null == vd || vd.isEmpty()) {
-            throw new IllegalRequestParamException("vd");
-        }
-        RadCheck radCheck = userService.getConnInfoByDevice(vd);
-        if (null == radCheck) {
-            return new ConnectAuthResponse(userService.createNewConnInfo(vd));
-        } else {
-            return new ConnectAuthResponse(radCheck);
-        }
+    public ConnectAuthResponse connect(HttpServletRequest request) throws Exception {
+        String vd = (String) request.getAttribute("vd");
+        userService.createFreeUserIfNotExists(vd);
+        return new ConnectAuthResponse(userService.createConnInfoIfNotExists(vd));
     }
 
     @RequestMapping(path = "/notify.php")
@@ -75,6 +76,32 @@ public class VpnController {
         String content = request.getParameter("content");
         logger.info(content);
         return Collections.singletonList("ok");
+    }
+
+    @RequestMapping(path = "/sendMobileCode.php")
+    public EmptyResponse sendMobileCode(String mobile, String captcha, HttpServletRequest request) throws IOException {
+        if (null == mobile || mobile.isEmpty()) {
+            throw new IllegalRequestParamException("mobile");
+        }
+        if (null == captcha || captcha.isEmpty()) {
+            throw new IllegalRequestParamException("captcha");
+        }
+        userService.sendMobileCode(mobile, captcha, (String) request.getAttribute("vd"));
+        return new EmptyResponse();
+    }
+
+    @RequestMapping(path = "/login.php")
+    public VipUserInfoResponse loginWithMobile(String mobile, String code, HttpServletRequest request) throws
+            Exception {
+        if (null == mobile || mobile.isEmpty()) {
+            throw new IllegalRequestParamException("mobile");
+        }
+        if (null == code || code.isEmpty()) {
+            throw new IllegalRequestParamException("code");
+        }
+        String vd = (String) request.getAttribute("vd");
+        VipUserWithToken userWithToken = userService.loginWithMobile(mobile, code, vd);
+        return new VipUserInfoResponse(userWithToken);
     }
 
 }

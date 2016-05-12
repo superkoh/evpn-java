@@ -1,5 +1,6 @@
 package me.superkoh.evpn.configuration;
 
+import me.superkoh.evpn.controller.advice.BeforeActionInterceptor;
 import me.superkoh.evpn.controller.advice.SecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,8 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         if (env.acceptsProfiles("prod")) {
             registry.addInterceptor(new SecurityInterceptor()).addPathPatterns("/*").excludePathPatterns("/notify.php");
-            super.addInterceptors(registry);
         }
+        registry.addInterceptor(new BeforeActionInterceptor()).addPathPatterns("/*");
+        super.addInterceptors(registry);
     }
 }

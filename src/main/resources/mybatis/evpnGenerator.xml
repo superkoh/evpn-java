@@ -20,6 +20,7 @@
         <javaModelGenerator targetPackage="me.superkoh.evpn.domain.model.evpn" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
+            <property name="rootClass" value="me.superkoh.evpn.domain.base.BaseRecord"/>
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="me.superkoh.evpn.domain.mapper.evpn"  targetProject="src/main/resources">
@@ -32,6 +33,20 @@
 
         <table tableName="banner" domainObjectName="Banner" >
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
+        </table>
+
+        <table tableName="free_user" domainObjectName="FreeUser" >
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+        </table>
+
+        <table tableName="vip_user" domainObjectName="VipUser" >
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+        </table>
+
+        <table tableName="mobile_validation_code" domainObjectName="MobileValidationCode" >
+        </table>
+
+        <table tableName="vip_user_token" domainObjectName="VipUserToken" >
         </table>
 
     </context>

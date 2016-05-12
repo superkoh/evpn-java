@@ -20,6 +20,20 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
             response.sendError(403, "Permission Denied");
             return false;
         }
+        String vd = request.getHeader("evpn-vd");
+        if (null == vd) vd = request.getParameter("vd");
+        if (null == vd || vd.length() != 36) {
+            response.sendError(403, "Permission Denied");
+            return false;
+        }
+        String v = request.getHeader("evpn-v");
+        if (null == v) v = request.getParameter(v);
+        if (null == v) {
+            response.sendError(403, "Permission Denied");
+            return false;
+        }
+        request.setAttribute("vd", vd);
+        request.setAttribute("v", v);
         return super.preHandle(request, response, handler);
     }
 }

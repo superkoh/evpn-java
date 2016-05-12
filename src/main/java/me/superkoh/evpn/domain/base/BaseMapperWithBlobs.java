@@ -5,13 +5,11 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * Created by KOH on 16/5/4.
+ * Created by KOH on 16/5/12.
  */
-public interface BaseMapperWithBlobs<R, RE, K> extends BaseMapper<R, RE, K> {
+public interface BaseMapperWithBlobs<R, RE> extends BaseMapper<R, RE> {
 
     List<R> selectByExampleWithBLOBs(RE example);
 
     int updateByExampleWithBLOBs(@Param("record") R record, @Param("example") RE example);
-
-    int updateByPrimaryKeyWithBLOBs(R record);
 }

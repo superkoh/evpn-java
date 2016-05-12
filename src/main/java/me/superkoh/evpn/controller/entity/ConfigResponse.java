@@ -1,6 +1,7 @@
 package me.superkoh.evpn.controller.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import me.superkoh.evpn.domain.model.evpn.Banner;
 import me.superkoh.evpn.domain.model.radius.Nas;
 
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by KOH on 16/4/17.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigResponse {
 
     public List<ServerResponse> servers = new ArrayList<>();
@@ -19,16 +21,19 @@ public class ConfigResponse {
     public String updateInfo = "";
     public boolean forceUpdate = false;
     public String forceUpdateWebview = "";
+    public VipUserInfoResponse userInfo;
 
     public static class ServerResponse {
         public String ip;
         public String name;
         public int cnt;
+        public int rcnt;
 
         public ServerResponse(Nas nas, int connectCount) {
             this.ip = nas.getNasname();
             this.name = nas.getShortname();
-            this.cnt = connectCount;
+            this.cnt = connectCount * 3;
+            this.rcnt = connectCount;
         }
     }
 

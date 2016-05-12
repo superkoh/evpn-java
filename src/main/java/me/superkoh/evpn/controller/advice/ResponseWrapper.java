@@ -1,5 +1,6 @@
 package me.superkoh.evpn.controller.advice;
 
+import me.superkoh.evpn.controller.base.EmptyResponse;
 import me.superkoh.evpn.controller.base.ErrorResponse;
 import me.superkoh.evpn.controller.base.SuccessResponse;
 import org.springframework.core.MethodParameter;
@@ -25,6 +26,9 @@ public class ResponseWrapper implements ResponseBodyAdvice {
                                   ServerHttpResponse response) {
         if (body instanceof ErrorResponse) {
             return body;
+        }
+        if (body instanceof EmptyResponse) {
+            return new SuccessResponse();
         }
         SuccessResponse successResponse = new SuccessResponse();
         successResponse.obj = body;

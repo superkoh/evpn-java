@@ -5,15 +5,13 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * Created by KOH on 16/5/4.
+ * Created by KOH on 16/5/12.
  */
-public interface BaseMapper<R, RE, K> {
+public interface BaseMapper<R, RE> {
 
     int countByExample(RE example);
 
     int deleteByExample(RE example);
-
-    int deleteByPrimaryKey(K id);
 
     int insert(R record);
 
@@ -21,13 +19,7 @@ public interface BaseMapper<R, RE, K> {
 
     List<R> selectByExample(RE example);
 
-    R selectByPrimaryKey(K id);
-
     int updateByExampleSelective(@Param("record") R record, @Param("example") RE example);
 
     int updateByExample(@Param("record") R record, @Param("example") RE example);
-
-    int updateByPrimaryKeySelective(R record);
-
-    int updateByPrimaryKey(R record);
 }

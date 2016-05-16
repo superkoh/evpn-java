@@ -2,6 +2,7 @@ package me.superkoh.evpn.controller.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import me.superkoh.evpn.controller.base.BizResponse;
 import me.superkoh.evpn.domain.model.evpn.Banner;
 import me.superkoh.evpn.domain.model.radius.Nas;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by KOH on 16/4/17.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ConfigResponse {
+public class ConfigResponse extends BizResponse {
 
     public List<ServerResponse> servers = new ArrayList<>();
     public List<BannerResponse> ads = new ArrayList<>();

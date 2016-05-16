@@ -6,6 +6,7 @@ import me.superkoh.evpn.exception.IllegalRequestParamException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 
@@ -24,7 +25,7 @@ public class CaptchaController {
     @Autowired
     private Jedis jedis;
 
-    @RequestMapping("/captcha")
+    @RequestMapping(path = "/captcha", method = RequestMethod.GET)
     public ModelAndView getCaptchaImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String vd = (String) request.getAttribute("vd");
         if (null == vd || vd.isEmpty()) {

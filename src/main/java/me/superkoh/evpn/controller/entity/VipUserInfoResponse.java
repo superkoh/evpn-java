@@ -1,6 +1,7 @@
 package me.superkoh.evpn.controller.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import me.superkoh.evpn.controller.base.BizResponse;
 import me.superkoh.evpn.domain.model.evpn.VipUser;
 import me.superkoh.evpn.service.entity.VipUserWithToken;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 /**
  * Created by KOH on 16/5/12.
  */
-public class VipUserInfoResponse {
+public class VipUserInfoResponse extends BizResponse {
 
     public String mobile;
 

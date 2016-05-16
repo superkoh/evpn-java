@@ -1,5 +1,6 @@
 package me.superkoh.evpn.controller.advice;
 
+import me.superkoh.evpn.controller.base.BizResponse;
 import me.superkoh.evpn.controller.base.EmptyResponse;
 import me.superkoh.evpn.controller.base.ErrorResponse;
 import me.superkoh.evpn.controller.base.SuccessResponse;
@@ -24,6 +25,9 @@ public class ResponseWrapper implements ResponseBodyAdvice {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class selectedConverterType, ServerHttpRequest request,
                                   ServerHttpResponse response) {
+        if (!(body instanceof BizResponse)) {
+            return body;
+        }
         if (body instanceof ErrorResponse) {
             return body;
         }

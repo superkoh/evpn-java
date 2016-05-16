@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class VpnController {
     @Autowired
     private BannerService bannerService;
 
-    @RequestMapping(path = "/config.php")
+    @RequestMapping(path = "/config.php", method = RequestMethod.GET)
     public ConfigResponse config(HttpServletRequest request) throws Exception {
         List<Nas> nasList = nasService.getAllNasList();
         Map<String, Integer> nasConnectCount = nasService.getNasConnectCount();
@@ -64,21 +65,21 @@ public class VpnController {
         return response;
     }
 
-    @RequestMapping(path = "/connect.php")
+    @RequestMapping(path = "/connect.php", method = RequestMethod.GET)
     public ConnectAuthResponse connect(HttpServletRequest request) throws Exception {
         String vd = (String) request.getAttribute("vd");
         userService.createFreeUserIfNotExists(vd);
         return new ConnectAuthResponse(userService.createConnInfoIfNotExists(vd));
     }
 
-    @RequestMapping(path = "/notify.php")
+    @RequestMapping(path = "/notify.php", method = {RequestMethod.GET, RequestMethod.POST})
     public List<String> weidianCallback(HttpServletRequest request) throws IOException {
         String content = request.getParameter("content");
         logger.info(content);
         return Collections.singletonList("ok");
     }
 
-    @RequestMapping(path = "/sendMobileCode.php")
+    @RequestMapping(path = "/sendMobileCode.php", method = RequestMethod.POST)
     public EmptyResponse sendMobileCode(String mobile, String captcha, HttpServletRequest request) throws IOException {
         if (null == mobile || mobile.isEmpty()) {
             throw new IllegalRequestParamException("mobile");
@@ -90,7 +91,7 @@ public class VpnController {
         return new EmptyResponse();
     }
 
-    @RequestMapping(path = "/login.php")
+    @RequestMapping(path = "/login.php", method = RequestMethod.POST)
     public VipUserInfoResponse loginWithMobile(String mobile, String code, HttpServletRequest request) throws
             Exception {
         if (null == mobile || mobile.isEmpty()) {

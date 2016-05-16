@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
  * Created by KOH on 16/5/12.
  */
 @Configuration
-@PropertySource("classpath:/redis/redis-${env:prod}.properties")
+@PropertySource("classpath:/redis/redis-${spring.profiles.active}.properties")
 public class RedisConfiguration {
 
     @Autowired

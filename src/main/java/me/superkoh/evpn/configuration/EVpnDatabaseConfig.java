@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @MapperScan(value = "me.superkoh.evpn.domain.mapper.evpn", sqlSessionFactoryRef = "eVpnSqlSessionFactory")
-@PropertySource("classpath:/mybatis/mybatis-${env:prod}.properties")
+@PropertySource("classpath:/mybatis/mybatis-${spring.profiles.active}.properties")
 public class EVpnDatabaseConfig {
 
     @Autowired

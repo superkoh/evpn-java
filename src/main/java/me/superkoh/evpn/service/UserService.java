@@ -148,8 +148,7 @@ public class UserService {
             jedis.set("send_code_" + mobile, objectMapper.writeValueAsString(validationCode));
             jedis.expire("send_code_" + mobile, 60 * 10);
         }
-        // TODO: send mobile code
-        smsService.send(mobile, "您的短信验证码是:" + validationCode.getCode());
+        smsService.sendLoginPassword(mobile, validationCode.getCode());
     }
 
     @Transactional(readOnly = true, transactionManager = "eVpnTransactionManager")

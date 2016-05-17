@@ -61,7 +61,7 @@
             <appender-ref ref="ACCESS_FILE"/>
         </logger>
 
-        <logger name="smsLogger" level="INFO">
+        <logger name="me.superkoh.evpn.component.sms" level="INFO">
             <appender-ref ref="SMS"/>
         </logger>
 

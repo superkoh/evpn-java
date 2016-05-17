@@ -68,19 +68,21 @@ public class YunPianSmsMessage implements SmsMessage {
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 YunPianSendResponse response = responseEntity.getBody();
                 if (response.getCode() == 0) {
-                    logger.info("send sms success: [mobile:{},sid:{}]", response.getMobile(), response.getSid());
+                    logger.info("send sms success: [mobile:{},content:{},sid:{}]", response.getMobile(), content,
+                            response.getSid());
                 } else {
-                    logger.error("send sms error: [mobile:{},msg:{}]", response.getMobile(), response.getMsg());
+                    logger.error("send sms error: [mobile:{},content:{},msg:{}]", response.getMobile(), content,
+                            response.getMsg());
                 }
             } else {
-                logger.error("send sms error: [mobile:{},code:{},_msg:{}]", mobile, content, responseEntity
+                logger.error("send sms error: [mobile:{},content:{},_msg:{}]", mobile, content, responseEntity
                         .getStatusCode().getReasonPhrase());
             }
         } catch (HttpClientErrorException e) {
-            logger.error("send sms error: [mobile:{},code:{},_msg{},response:{}]", mobile, content, e.getMessage()
+            logger.error("send sms error: [mobile:{},content:{},_msg{},response:{}]", mobile, content, e.getMessage()
                     , e.getResponseBodyAsString());
         } catch (Exception e) {
-            logger.error("send sms error: [mobile:{},code:{},_msg:{}]", mobile, content, e.getMessage());
+            logger.error("send sms error: [mobile:{},content:{},_msg:{}]", mobile, content, e.getMessage());
         }
     }
 }

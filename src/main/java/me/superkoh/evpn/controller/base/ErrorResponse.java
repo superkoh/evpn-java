@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Created by KOH on 16/5/7.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
+public class ErrorResponse extends BizResponse {
     public int ok = 0;
     public String msg;
 }

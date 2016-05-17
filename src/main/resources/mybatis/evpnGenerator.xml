@@ -44,6 +44,7 @@
         </table>
 
         <table tableName="mobile_validation_code" domainObjectName="MobileValidationCode" >
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
         </table>
 
         <table tableName="vip_user_token" domainObjectName="VipUserToken" >

@@ -4,6 +4,7 @@ import me.superkoh.evpn.Application;
 import me.superkoh.evpn.service.base.SmsService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,15 @@ public class YunpianSmsServiceTest {
     }
 
     @Test
-    public void send() throws Exception {
-        smsService.sendLoginPassword("18621181612", "1234");
+    @Ignore
+    public void sendSms() throws Exception {
+        smsService.sendLoginPasswordBySms("18621181612", "1234");
+    }
+
+    @Test
+    @Ignore
+    public void sendVoice() throws Exception {
+        smsService.sendLoginPasswordByVoice("18621181612", "1234");
     }
 
 }

@@ -1,0 +1,2 @@
+include::{generated}/paths.adoc[]
+include::{generated}/definitions.adoc[]

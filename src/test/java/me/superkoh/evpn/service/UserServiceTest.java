@@ -2,7 +2,6 @@ package me.superkoh.evpn.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.superkoh.evpn.Application;
-import me.superkoh.evpn.configuration.RedisConfiguration;
 import me.superkoh.evpn.domain.model.evpn.VipUser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import redis.clients.jedis.Jedis;
@@ -23,8 +23,9 @@ import java.util.Date;
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, RedisConfiguration.class})
+@SpringApplicationConfiguration(classes = {Application.class})
 @WebAppConfiguration
+@ActiveProfiles("dev")
 public class UserServiceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceTest.class);

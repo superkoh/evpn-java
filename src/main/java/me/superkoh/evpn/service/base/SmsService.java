@@ -12,7 +12,13 @@ abstract public class  SmsService {
 
     abstract public void send(String mobile, String content);
 
-    public void sendLoginPassword(String mobile, String code) {
+    abstract public void sendVoiceCode(String mobile, String code);
+
+    public void sendLoginPasswordBySms(String mobile, String code) {
         this.send(mobile, "【evpn】您的登录密码是:" + code);
+    }
+
+    public void sendLoginPasswordByVoice(String mobile, String code) {
+        this.sendVoiceCode(mobile, code);
     }
 }

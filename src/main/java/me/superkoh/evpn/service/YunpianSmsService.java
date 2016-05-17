@@ -11,7 +11,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by KOH on 16/5/12.
@@ -20,6 +20,8 @@ import java.util.Arrays;
 public class YunpianSmsService extends SmsService {
 
     private static final String SINGLE_SEND_URL = "https://sms.yunpian.com/v2/sms/single_send.json";
+
+    private static final String VOICE_SEND_URL = "https://voice.yunpian.com/v2/voice/send.json";
 
     private static final String APIKEY = "0d186472132307a8a8cea7f7e69ccc6d";
 
@@ -30,7 +32,7 @@ public class YunpianSmsService extends SmsService {
     @Async
     public void send(String mobile, String content) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> query = new LinkedMultiValueMap<>();
         query.add("apikey", APIKEY);
@@ -56,6 +58,39 @@ public class YunpianSmsService extends SmsService {
                     , e.getResponseBodyAsString());
         } catch (Exception e) {
             logger.error("send sms error: [mobile:{},content:{},_msg:{}]", mobile, content, e.getMessage());
+        }
+    }
+
+    @Override
+    @Async
+    public void sendVoiceCode(String mobile, String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> query = new LinkedMultiValueMap<>();
+        query.add("apikey", APIKEY);
+        query.add("mobile", mobile);
+        query.add("code", code);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(query, headers);
+        try {
+            ResponseEntity<YunpianSingleSendResponse> responseEntity = restTemplate.exchange(VOICE_SEND_URL, HttpMethod
+                    .POST, httpEntity, YunpianSingleSendResponse.class);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                YunpianSingleSendResponse response = responseEntity.getBody();
+                if (response.code == 0) {
+                    logger.info("send sms success: [mobile:{},sid:{}]", response.mobile, response.sid);
+                } else {
+                    logger.error("send sms error: [mobile:{},msg:{}]", response.mobile, response.msg);
+                }
+            } else {
+                logger.error("send sms error: [mobile:{},code:{},_msg:{}]", mobile, code, responseEntity
+                        .getStatusCode().getReasonPhrase());
+            }
+        } catch (HttpClientErrorException e) {
+            logger.error("send sms error: [mobile:{},code:{},_msg{},response:{}]", mobile, code, e.getMessage()
+                    , e.getResponseBodyAsString());
+        } catch (Exception e) {
+            logger.error("send sms error: [mobile:{},code:{},_msg:{}]", mobile, code, e.getMessage());
         }
     }
 }

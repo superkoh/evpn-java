@@ -2,12 +2,13 @@ package me.superkoh.evpn.controller;
 
 import com.github.bingoohuang.patchca.Patchca;
 import com.github.bingoohuang.patchca.service.Captcha;
+import io.swagger.annotations.ApiOperation;
 import me.superkoh.evpn.exception.IllegalRequestParamException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 
 import javax.imageio.ImageIO;
@@ -25,8 +26,10 @@ public class CaptchaController {
     @Autowired
     private Jedis jedis;
 
-    @RequestMapping(path = "/captcha", method = RequestMethod.GET)
-    public ModelAndView getCaptchaImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @ApiOperation("获取用户登录验证码图片")
+    @RequestMapping(path = "/user/login-captcha.php", method = RequestMethod.GET, produces = {MediaType.IMAGE_PNG_VALUE},
+            consumes = {MediaType.ALL_VALUE})
+    public void getCaptchaImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String vd = (String) request.getAttribute("vd");
         if (null == vd || vd.isEmpty()) {
             throw new IllegalRequestParamException("vd");
@@ -50,6 +53,5 @@ public class CaptchaController {
         } finally {
             os.close();
         }
-        return null;
     }
 }

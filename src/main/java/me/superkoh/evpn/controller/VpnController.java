@@ -1,23 +1,23 @@
 package me.superkoh.evpn.controller;
 
-import me.superkoh.evpn.controller.base.EmptyResponse;
+import io.swagger.annotations.ApiOperation;
 import me.superkoh.evpn.controller.entity.ConfigResponse;
 import me.superkoh.evpn.controller.entity.ConnectAuthResponse;
 import me.superkoh.evpn.controller.entity.VipUserInfoResponse;
 import me.superkoh.evpn.domain.model.evpn.Banner;
 import me.superkoh.evpn.domain.model.evpn.VipUser;
 import me.superkoh.evpn.domain.model.radius.Nas;
-import me.superkoh.evpn.exception.IllegalRequestParamException;
 import me.superkoh.evpn.service.BannerService;
 import me.superkoh.evpn.service.NasService;
 import me.superkoh.evpn.service.UserService;
-import me.superkoh.evpn.service.entity.VipUserWithToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -43,7 +43,9 @@ public class VpnController {
     @Autowired
     private BannerService bannerService;
 
-    @RequestMapping(path = "/config.php", method = RequestMethod.GET)
+    @ApiOperation("获取服务器及当前用户信息")
+    @RequestMapping(path = "/config.php", method = RequestMethod.GET, produces = {MediaType
+            .APPLICATION_JSON_UTF8_VALUE}, consumes = MediaType.ALL_VALUE)
     public ConfigResponse config(HttpServletRequest request) throws Exception {
         List<Nas> nasList = nasService.getAllNasList();
         Map<String, Integer> nasConnectCount = nasService.getNasConnectCount();
@@ -65,44 +67,21 @@ public class VpnController {
         return response;
     }
 
-    @RequestMapping(path = "/connect.php", method = RequestMethod.GET)
+    @ApiOperation("获取用户VPN连接账户")
+    @RequestMapping(path = "/connect.php", method = RequestMethod.GET, produces = {MediaType
+            .APPLICATION_JSON_UTF8_VALUE}, consumes = {MediaType.ALL_VALUE})
     public ConnectAuthResponse connect(HttpServletRequest request) throws Exception {
         String vd = (String) request.getAttribute("vd");
         userService.createFreeUserIfNotExists(vd);
         return new ConnectAuthResponse(userService.createConnInfoIfNotExists(vd));
     }
 
-    @RequestMapping(path = "/notify.php", method = {RequestMethod.GET, RequestMethod.POST})
+    @ApiIgnore
+    @RequestMapping(path = "/weidian-notify", method = {RequestMethod.GET, RequestMethod.POST})
     public List<String> weidianCallback(HttpServletRequest request) throws IOException {
         String content = request.getParameter("content");
         logger.info(content);
         return Collections.singletonList("ok");
-    }
-
-    @RequestMapping(path = "/sendMobileCode.php", method = RequestMethod.POST)
-    public EmptyResponse sendMobileCode(String mobile, String captcha, HttpServletRequest request) throws IOException {
-        if (null == mobile || mobile.isEmpty()) {
-            throw new IllegalRequestParamException("mobile");
-        }
-        if (null == captcha || captcha.isEmpty()) {
-            throw new IllegalRequestParamException("captcha");
-        }
-        userService.sendMobileCode(mobile, captcha, (String) request.getAttribute("vd"));
-        return new EmptyResponse();
-    }
-
-    @RequestMapping(path = "/login.php", method = RequestMethod.POST)
-    public VipUserInfoResponse loginWithMobile(String mobile, String code, HttpServletRequest request) throws
-            Exception {
-        if (null == mobile || mobile.isEmpty()) {
-            throw new IllegalRequestParamException("mobile");
-        }
-        if (null == code || code.isEmpty()) {
-            throw new IllegalRequestParamException("code");
-        }
-        String vd = (String) request.getAttribute("vd");
-        VipUserWithToken userWithToken = userService.loginWithMobile(mobile, code, vd);
-        return new VipUserInfoResponse(userWithToken);
     }
 
 }

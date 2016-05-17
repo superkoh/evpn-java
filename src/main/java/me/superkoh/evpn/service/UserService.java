@@ -1,5 +1,6 @@
 package me.superkoh.evpn.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.superkoh.evpn.domain.mapper.evpn.FreeUserMapper;
 import me.superkoh.evpn.domain.mapper.evpn.MobileValidationCodeMapper;
@@ -129,26 +130,41 @@ public class UserService {
 
 
     @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
-    public void sendMobileCode(String mobile, String captcha, String vd) throws IOException {
+    public void sendLoginMobileCode(String mobile, String captcha, String vd) throws IOException {
         String expectedCaptcha = jedis.get("login_captcha_" + vd);
         if (null == expectedCaptcha || !expectedCaptcha.toLowerCase().equals(captcha.toLowerCase())) {
             throw new BizException(-1, "验证码错误");
         }
         MobileValidationCode validationCode = this.getMobileCode(mobile);
         if (null == validationCode) {
-            validationCode = new MobileValidationCode();
-            validationCode.setMobile(mobile);
-            int randomCode = RandomUtils.nextInt(1000, 9999);
-            validationCode.setCode(String.valueOf(randomCode));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 10);
-            validationCode.setExpireTime(calendar.getTime());
-            mobileValidationCodeMapper.insert(validationCode);
-            jedis.set("send_code_" + mobile, objectMapper.writeValueAsString(validationCode));
-            jedis.expire("send_code_" + mobile, 60 * 10);
+            validationCode = this.generateValidationCode(mobile);
         }
-        smsService.sendLoginPassword(mobile, validationCode.getCode());
+        smsService.sendLoginPasswordBySms(mobile, validationCode.getCode());
+    }
+
+    @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
+    public void sendLoginVoiceCode(String mobile) throws IOException {
+        MobileValidationCode validationCode = this.getMobileCode(mobile);
+        if (null == validationCode) {
+            validationCode = this.generateValidationCode(mobile);
+        }
+        smsService.sendLoginPasswordByVoice(mobile, validationCode.getCode());
+    }
+
+    @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
+    private MobileValidationCode generateValidationCode(String mobile) throws JsonProcessingException {
+        MobileValidationCode validationCode = new MobileValidationCode();
+        validationCode.setMobile(mobile);
+        int randomCode = RandomUtils.nextInt(1000, 9999);
+        validationCode.setCode(String.valueOf(randomCode));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 10);
+        validationCode.setExpireTime(calendar.getTime());
+        mobileValidationCodeMapper.insert(validationCode);
+        jedis.set("send_code_" + mobile, objectMapper.writeValueAsString(validationCode));
+        jedis.expire("send_code_" + mobile, 60 * 10);
+        return validationCode;
     }
 
     @Transactional(readOnly = true, transactionManager = "eVpnTransactionManager")
@@ -159,10 +175,7 @@ public class UserService {
     @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
     public VipUserWithToken loginWithMobile(String mobile, String validationCode, String vd) throws Exception {
         Date now = new Date();
-        MobileValidationCode expectCode = this.getMobileCode(mobile);
-        if (null == expectCode || !expectCode.getCode().equals(validationCode)) {
-            throw new BizException(-1, "手机验证码错误");
-        }
+        this.checkMobileCode(mobile, validationCode);
         FreeUser freeUser = this.createFreeUserIfNotExists(vd);
         VipUser user = this.getVipUserByMobile(mobile);
         if (null == user) {
@@ -180,6 +193,17 @@ public class UserService {
         jedis.set("token_map_" + userToken.getToken(), objectMapper.writeValueAsString(user));
         jedis.expire("token_map_" + userToken.getToken(), 3600 * 24 * 24);
         return new VipUserWithToken(user, userToken);
+    }
+
+    @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
+    public void checkMobileCode(String mobile, String validationCode) throws IOException {
+        MobileValidationCode expectCode = this.getMobileCode(mobile);
+        if (null == expectCode || !expectCode.getCode().equals(validationCode)) {
+            throw new BizException(-1, "手机验证码错误");
+        }
+        expectCode.setExpireTime(new Date());
+        mobileValidationCodeMapper.updateByPrimaryKey(expectCode);
+        jedis.del("send_code_" + mobile);
     }
 
     @Transactional(readOnly = true, transactionManager = "eVpnTransactionManager")

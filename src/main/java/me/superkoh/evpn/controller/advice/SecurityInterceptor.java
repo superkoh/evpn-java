@@ -17,19 +17,19 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
             Exception {
         String eAuth = request.getHeader("eAuth");
         if (null == eAuth || !eAuth.equals(E_AUTH)) {
-            response.sendError(403, "Permission Denied");
+            response.sendError(403, "Permission Denied: auth");
             return false;
         }
         String vd = request.getHeader("evpn-vd");
         if (null == vd) vd = request.getParameter("vd");
         if (null == vd) {
-            response.sendError(403, "Permission Denied");
+            response.sendError(403, "Permission Denied: vd");
             return false;
         }
         String v = request.getHeader("evpn-v");
-        if (null == v) v = request.getParameter(v);
+        if (null == v) v = request.getParameter("v");
         if (null == v) {
-            response.sendError(403, "Permission Denied");
+            response.sendError(403, "Permission Denied: v");
             return false;
         }
         request.setAttribute("vd", vd);

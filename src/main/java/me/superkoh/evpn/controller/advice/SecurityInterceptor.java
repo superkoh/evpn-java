@@ -22,7 +22,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         }
         String vd = request.getHeader("evpn-vd");
         if (null == vd) vd = request.getParameter("vd");
-        if (null == vd || vd.length() != 36) {
+        if (null == vd) {
             response.sendError(403, "Permission Denied");
             return false;
         }

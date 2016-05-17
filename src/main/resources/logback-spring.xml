@@ -21,24 +21,6 @@
             </encoder>
         </appender>
 
-        <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/var/log/evpn/error.log</file>
-            <prudent>true</prudent>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <!-- daily rollover -->
-                <fileNamePattern>/var/log/evpn/error.%d{yyyy-MM-dd, Asia/Shanghai}.log</fileNamePattern>
-
-                <!-- keep 30 days' worth of history -->
-                <maxHistory>10</maxHistory>
-
-            </rollingPolicy>
-            <!-- encoders are assigned the type
-                 ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-            <encoder>
-                <pattern>%d{HH:mm:ss.SSS, Asia/Shanghai} [%-10.10thread][%-5.5level] %msg [%logger{36}]%n</pattern>
-            </encoder>
-        </appender>
-
         <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>/var/log/evpn/access.log</file>
             <prudent>true</prudent>
@@ -81,10 +63,6 @@
 
         <logger name="smsLogger" level="INFO">
             <appender-ref ref="SMS"/>
-        </logger>
-
-        <logger level="ERROR">
-            <appender-ref ref="ERROR_FILE"/>
         </logger>
 
         <root level="INFO">

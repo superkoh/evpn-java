@@ -14,11 +14,9 @@ import me.superkoh.evpn.domain.model.evpn.VipUserToken;
 import me.superkoh.evpn.domain.model.radius.RadCheck;
 import me.superkoh.evpn.exception.BizException;
 import me.superkoh.evpn.service.entity.VipUserWithToken;
-import me.superkoh.evpn.service.base.SmsService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
@@ -56,7 +54,6 @@ public class UserService {
     private ObjectMapper objectMapper;
 
     @Autowired
-    @Qualifier("yunpianSmsService")
     private SmsService smsService;
 
     @Transactional(readOnly = true, transactionManager = "radiusTransactionManager")
@@ -135,6 +132,7 @@ public class UserService {
         if (null == expectedCaptcha || !expectedCaptcha.toLowerCase().equals(captcha.toLowerCase())) {
             throw new BizException(-1, "验证码错误");
         }
+        jedis.del("login_captcha_" + vd);
         MobileValidationCode validationCode = this.getMobileCode(mobile);
         if (null == validationCode) {
             validationCode = this.generateValidationCode(mobile);

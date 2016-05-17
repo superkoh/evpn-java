@@ -31,7 +31,7 @@ public class ConfigResponse extends BizResponse {
     @ApiModelProperty(value = "强制升级引导Webview", required = true)
     public String forceUpdateWebview = "";
 
-    @ApiModelProperty(value = "当前登录用户信息", required = false)
+    @ApiModelProperty(value = "当前登录用户信息")
     public VipUserInfoResponse userInfo;
 
     @ApiModelProperty(value = "是否需要升级", required = true)

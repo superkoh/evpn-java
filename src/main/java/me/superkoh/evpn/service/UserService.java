@@ -104,7 +104,7 @@ public class UserService {
     }
 
     @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
-    public FreeUser createFreeUserIfNotExists(String username) throws Exception {
+    public FreeUser createFreeUserIfNotExists(String username) {
         FreeUser user = this.getFreeUserByUserName(username);
         if (null == user) {
             user = this.createNewFreeUser(username);

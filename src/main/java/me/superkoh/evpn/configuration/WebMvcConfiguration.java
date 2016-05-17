@@ -2,9 +2,7 @@ package me.superkoh.evpn.configuration;
 
 import me.superkoh.evpn.controller.advice.BeforeActionInterceptor;
 import me.superkoh.evpn.controller.advice.SecurityInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -14,17 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
-    @Autowired
-    private Environment env;
+//    @Autowired
+//    private Environment env;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        if (env.acceptsProfiles("prod")) {
-            registry.addInterceptor(new SecurityInterceptor()).addPathPatterns("/**.php").addPathPatterns("/user/**" +
-                    ".php");
-        }
-        registry.addInterceptor(new BeforeActionInterceptor()).addPathPatterns("/**.php").addPathPatterns("/user/**" +
-                ".php");
+//        if (env.acceptsProfiles("prod")) {
+        registry.addInterceptor(new SecurityInterceptor()).addPathPatterns("/*.php").addPathPatterns("/**/*.php");
+//        }
+        registry.addInterceptor(new BeforeActionInterceptor()).addPathPatterns("/*.php").addPathPatterns("/**/*.php");
         super.addInterceptors(registry);
     }
 }

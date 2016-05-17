@@ -30,7 +30,7 @@ public class BeforeActionInterceptor extends HandlerInterceptorAdapter {
         addLogKV(accessLogBuilder, "params", parseParams(request.getParameterMap()));
         ApplicationContext ctx = ApplicationContextUtil.getApplicationContext();
         UserService userService = (UserService) ctx.getBean("userService");
-        String userToken = request.getParameter("token");
+        String userToken = request.getHeader("eToken");
         if (null != userToken) {
             VipUser user = userService.getVipUserByToken(userToken);
             if (null != user) {
@@ -41,34 +41,36 @@ public class BeforeActionInterceptor extends HandlerInterceptorAdapter {
             }
         }
         String vd = (String) request.getAttribute("vd");
-        if (null == vd) {
-            vd = request.getHeader("evpn-vd");
-            if (null == vd) vd = request.getParameter("vd");
-            if (null != vd) {
-                request.setAttribute("vd", vd);
-                addLogKV(accessLogBuilder, "vd", vd);
-            } else {
-                response.sendError(403, "Permission Denied");
-                return false;
-            }
-        } else {
-            addLogKV(accessLogBuilder, "vd", vd);
-        }
+        addLogKV(accessLogBuilder, "vd", vd);
+//        if (null == vd) {
+//            vd = request.getHeader("evpn-vd");
+//            if (null == vd) vd = request.getParameter("vd");
+//            if (null != vd) {
+//                request.setAttribute("vd", vd);
+//                addLogKV(accessLogBuilder, "vd", vd);
+//            } else {
+//                response.sendError(403, "Permission Denied");
+//                return false;
+//            }
+//        } else {
+//            addLogKV(accessLogBuilder, "vd", vd);
+//        }
 
         String v = (String) request.getAttribute("v");
-        if (null == v) {
-            v = request.getHeader("evpn-v");
-            if (null == v) v = request.getParameter("v");
-            if (null != v) {
-                request.setAttribute("v", v);
-                addLogKV(accessLogBuilder, "v", v);
-            } else {
-                response.sendError(403, "Permission Denied");
-                return false;
-            }
-        } else {
-            addLogKV(accessLogBuilder, "v", v);
-        }
+        addLogKV(accessLogBuilder, "v", v);
+//        if (null == v) {
+//            v = request.getHeader("evpn-v");
+//            if (null == v) v = request.getParameter("v");
+//            if (null != v) {
+//                request.setAttribute("v", v);
+//                addLogKV(accessLogBuilder, "v", v);
+//            } else {
+//                response.sendError(403, "Permission Denied");
+//                return false;
+//            }
+//        } else {
+//            addLogKV(accessLogBuilder, "v", v);
+//        }
 
         accessLogger.info(accessLogBuilder.toString());
 

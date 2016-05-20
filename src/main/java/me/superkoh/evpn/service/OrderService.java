@@ -85,7 +85,8 @@ public class OrderService {
     }
 
     @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
-    public void orderCallback(WeidianPushContent content) throws Exception {
+    public void orderCallback(String contentStr) throws Exception {
+        WeidianPushContent content = objectMapper.readValue(contentStr, WeidianPushContent.class);
         Order order = orderMapper.selectByPrimaryKey("weidian." + content.message.orderId);
         boolean isNew = false;
         if (null == order) {
@@ -94,6 +95,8 @@ public class OrderService {
         }
         order.setId(content.message.orderId);
         order.setContent(objectMapper.writeValueAsString(content));
+        order.setTotalPrice((int) (Double.parseDouble(content.message.price) * 100));
+        order.setStatus(content.message.status);
         order.setDeliver(0);
         switch (content.type) {
             case "weidian.order.already_payment":

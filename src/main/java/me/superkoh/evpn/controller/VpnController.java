@@ -1,6 +1,7 @@
 package me.superkoh.evpn.controller;
 
 import io.swagger.annotations.ApiOperation;
+import me.superkoh.evpn.controller.base.EmptyResponse;
 import me.superkoh.evpn.controller.entity.ConfigResponse;
 import me.superkoh.evpn.controller.entity.ConnectAuthResponse;
 import me.superkoh.evpn.controller.entity.VipUserInfoResponse;
@@ -9,6 +10,7 @@ import me.superkoh.evpn.domain.model.evpn.VipUser;
 import me.superkoh.evpn.domain.model.radius.Nas;
 import me.superkoh.evpn.service.BannerService;
 import me.superkoh.evpn.service.NasService;
+import me.superkoh.evpn.service.OrderService;
 import me.superkoh.evpn.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +34,8 @@ public class VpnController {
 
     public static final Logger logger = LoggerFactory.getLogger(VpnController.class);
 
+    public static final Logger callbackLogger = LoggerFactory.getLogger("weidianCallbackLogger");
+
     @Autowired
     private UserService userService;
 
@@ -42,6 +44,9 @@ public class VpnController {
 
     @Autowired
     private BannerService bannerService;
+
+    @Autowired
+    private OrderService orderService;
 
     @ApiOperation("获取服务器及当前用户信息")
     @RequestMapping(path = "/config.php", method = RequestMethod.GET, produces = {MediaType
@@ -78,10 +83,11 @@ public class VpnController {
 
     @ApiIgnore
     @RequestMapping(path = "/weidian-notify", method = {RequestMethod.GET, RequestMethod.POST})
-    public List<String> weidianCallback(HttpServletRequest request) throws IOException {
+    public EmptyResponse weidianCallback(HttpServletRequest request) throws Exception {
         String content = request.getParameter("content");
-        logger.info(content);
-        return Collections.singletonList("ok");
+        callbackLogger.info(content);
+        orderService.orderCallback(content);
+        return new EmptyResponse();
     }
 
 }

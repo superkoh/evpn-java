@@ -171,17 +171,28 @@ public class UserService {
     }
 
     @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
+    public VipUser createVipUser(String mobile, FreeUser freeUser) throws Exception {
+        Date now = new Date();
+        VipUser user = new VipUser();
+        user.setMobile(mobile);
+        user.setCreateTime(now);
+        if (null == freeUser) {
+            user.setExpireDate(now);
+        } else {
+            user.setExpireDate(freeUser.getExpireDate());
+        }
+        vipUserMapper.insert(user);
+        return user;
+    }
+
+    @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
     public VipUserWithToken loginWithMobile(String mobile, String validationCode, String vd) throws Exception {
         Date now = new Date();
         this.checkMobileCode(mobile, validationCode);
         FreeUser freeUser = this.createFreeUserIfNotExists(vd);
         VipUser user = this.getVipUserByMobile(mobile);
         if (null == user) {
-            user = new VipUser();
-            user.setMobile(mobile);
-            user.setCreateTime(now);
-            user.setExpireDate(freeUser.getExpireDate());
-            vipUserMapper.insert(user);
+            user = this.createVipUser(mobile, freeUser);
         }
         VipUserToken userToken = new VipUserToken();
         userToken.setVipUserId(user.getId());
@@ -221,6 +232,19 @@ public class UserService {
             return null;
         }
         return user;
+    }
+
+    @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
+    public void updateExpireDateByMobile(String mobile, int monthToAdd) throws Exception {
+        VipUser user = vipUserMapper.selectByMobile(mobile);
+        if (null == user) {
+            user = this.createVipUser(mobile, null);
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(user.getExpireDate());
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + monthToAdd);
+        user.setExpireDate(calendar.getTime());
+        vipUserMapper.updateByPrimaryKey(user);
     }
 
 

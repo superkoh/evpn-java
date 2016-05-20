@@ -81,8 +81,10 @@ public class YunPianSmsMessage implements SmsMessage {
         } catch (HttpClientErrorException e) {
             logger.error("send sms error: [mobile:{},content:{},_msg:{},response:{}]", mobile, content, e.getMessage()
                     , e.getResponseBodyAsString());
+            throw e;
         } catch (Exception e) {
             logger.error("send sms error: [mobile:{},content:{},_msg:{}]", mobile, content, e.getMessage());
+            throw e;
         }
     }
 }

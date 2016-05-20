@@ -1,8 +1,5 @@
-package me.superkoh.evpn.configuration;
+package me.superkoh.evpn.component.sms;
 
-import me.superkoh.evpn.component.sms.SmsMessage;
-import me.superkoh.evpn.component.sms.YunPianSmsMessage;
-import me.superkoh.evpn.configuration.properties.YunpianSmsMessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

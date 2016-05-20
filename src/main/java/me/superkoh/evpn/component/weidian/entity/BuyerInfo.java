@@ -1,5 +1,5 @@
 
-package me.superkoh.evpn.domain.entity.weidian;
+package me.superkoh.evpn.component.weidian.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package me.superkoh.evpn.configuration.properties;
+package me.superkoh.evpn.component.sms;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

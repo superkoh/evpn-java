@@ -11,7 +11,7 @@ public class YunPianSendResponse {
     private double fee;
     private String unit;
     private String mobile;
-    private Long sid;
+    private String sid;
 
     public int getCode() {
         return code;
@@ -61,11 +61,11 @@ public class YunPianSendResponse {
         this.mobile = mobile;
     }
 
-    public Long getSid() {
+    public String getSid() {
         return sid;
     }
 
-    public void setSid(Long sid) {
+    public void setSid(String sid) {
         this.sid = sid;
     }
 }

@@ -1,12 +1,19 @@
 package me.superkoh.evpn.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.superkoh.evpn.component.weidian.WeidianApi;
+import me.superkoh.evpn.component.weidian.entity.Item;
 import me.superkoh.evpn.component.weidian.entity.OrderInfo;
 import me.superkoh.evpn.component.weidian.entity.WeidianPushContent;
+import me.superkoh.evpn.domain.mapper.evpn.OrderMapper;
+import me.superkoh.evpn.domain.mapper.evpn.ProductMapper;
+import me.superkoh.evpn.domain.model.evpn.Order;
+import me.superkoh.evpn.domain.model.evpn.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
@@ -28,7 +35,16 @@ public class OrderService {
     @Autowired
     private Jedis jedis;
 
-    protected String getAccessToken() throws IOException {
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private ProductMapper productMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    private String getAccessToken() throws IOException {
         String key = "weidian_access_token";
         String accessToken = jedis.get(key);
         if (null == accessToken) {
@@ -39,16 +55,61 @@ public class OrderService {
         return accessToken;
     }
 
-    // TODO: 计算时间
-    private int calculateMonthToAdd(OrderInfo orderInfo) {
-        return 1;
+    @Transactional(transactionManager = "eVpnTransactionManager", readOnly = true)
+    public Product getProductById(String id) throws IOException {
+        String key = "product_" + id;
+        String productStr = jedis.get(key);
+        Product product;
+        if (null == productStr) {
+            product = productMapper.selectByPrimaryKey(id);
+            if (null != product) {
+                jedis.set(key, objectMapper.writeValueAsString(product));
+                jedis.expire(key, 3600 * 24);
+            }
+        } else {
+            product = objectMapper.readValue(productStr, Product.class);
+        }
+        return product;
     }
 
-    public void autoDeliver(WeidianPushContent content) throws Exception {
-        if ("weidian.order.already_payment".equals(content.type)) {
-            userService.updateExpireDateByMobile(content.message.buyerInfo.phone, this.calculateMonthToAdd(content
-                    .message));
-            weidianApi.deliver(content.message.orderId, this.getAccessToken());
+    @Transactional(transactionManager = "eVpnTransactionManager", readOnly = true)
+    private int calculateMonthToAdd(OrderInfo orderInfo) throws IOException {
+        int month = 0;
+        for (Item item : orderInfo.items) {
+            Product prd = this.getProductById("weidian." + item.itemId);
+            if (null != prd) {
+                month += prd.getLimitInMonth();
+            }
+        }
+        return month;
+    }
+
+    @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
+    public void orderCallback(WeidianPushContent content) throws Exception {
+        Order order = orderMapper.selectByPrimaryKey("weidian." + content.message.orderId);
+        boolean isNew = false;
+        if (null == order) {
+            isNew = true;
+            order = new Order();
+        }
+        order.setId(content.message.orderId);
+        order.setContent(objectMapper.writeValueAsString(content));
+        order.setDeliver(0);
+        switch (content.type) {
+            case "weidian.order.already_payment":
+                order.setDeliver(1);
+                userService.updateExpireDateByMobile(content.message.buyerInfo.phone, this.calculateMonthToAdd(content
+                        .message));
+                weidianApi.deliver(content.message.orderId, this.getAccessToken());
+                order.setDeliver(2);
+                break;
+            default:
+                break;
+        }
+        if (isNew) {
+            orderMapper.insert(order);
+        } else {
+            orderMapper.updateByPrimaryKeyWithBLOBs(order);
         }
     }
 

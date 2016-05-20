@@ -40,7 +40,7 @@ public class WeidianApi {
         params.add("appkey", this.appkey);
         params.add("secret", this.secret);
         WeidianTokenResponse response = this.getQuery("https://api.vdian.com/token", params, WeidianTokenResponse
-                .class, null);
+                .class, new HashMap<>());
         return response.result;
     }
 

@@ -57,12 +57,12 @@ public class WeidianApiTest {
 
     @Test
     public void testGetOrderById() throws IOException {
-        OrderInfo info = weidianApi.getOrderById("774449834117309", "1e76548a8d3960c93843abccbdcba2390004755448");
+        OrderInfo info = weidianApi.getOrderById("774449834117309", "010c41f74bb13566e7148324e2d635140004755448");
     }
 
     @Test
     public void deliver() throws IOException {
-        weidianApi.deliver("774449834117309", "1e76548a8d3960c93843abccbdcba2390004755448");
+        weidianApi.deliver("774449834117309", "010c41f74bb13566e7148324e2d635140004755448");
     }
 
 }

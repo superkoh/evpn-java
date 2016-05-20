@@ -50,5 +50,11 @@
         <table tableName="vip_user_token" domainObjectName="VipUserToken" >
         </table>
 
+        <table tableName="product" domainObjectName="Product" >
+        </table>
+
+        <table tableName="order" domainObjectName="Order" >
+        </table>
+
     </context>
 </generatorConfiguration>

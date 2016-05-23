@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by KOH on 16/4/22.
  */
@@ -18,19 +20,23 @@ public class ExceptionHandlerController {
     Logger logger = LoggerFactory.getLogger(ExceptionHandlerController.class);
 
     @ExceptionHandler(BizException.class)
-    public @ResponseBody
-    ErrorResponse bizExceptionHandler(BizException e) {
+    public
+    @ResponseBody
+    ErrorResponse bizExceptionHandler(HttpServletRequest request, BizException e) {
         ErrorResponse res = new ErrorResponse();
         res.ok = e.getErrCode();
         res.msg = e.getErrMsg();
         if (res.msg.isEmpty()) {
             res.msg = "系统异常,请稍后重";
         }
+        res.msg = "[" + request.getRequestURL().toString() + "]" + res.msg;
         return res;
     }
 
     @ExceptionHandler(Exception.class)
-    public @ResponseBody ErrorResponse exceptionHandler(Exception e) {
+    public
+    @ResponseBody
+    ErrorResponse exceptionHandler(HttpServletRequest request, Exception e) {
         logger.error(e.getMessage(), e);
         ErrorResponse res = new ErrorResponse();
         res.ok = -1;
@@ -38,6 +44,7 @@ public class ExceptionHandlerController {
         if (res.msg.isEmpty()) {
             res.msg = "系统异常,请稍后重";
         }
+        res.msg = "[" + request.getRequestURL().toString() + "]" + res.msg;
         return res;
     }
 

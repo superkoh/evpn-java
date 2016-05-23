@@ -13,6 +13,7 @@ import me.superkoh.evpn.domain.model.evpn.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
@@ -80,12 +81,13 @@ public class OrderService {
         for (Item item : orderInfo.items) {
             Product prd = this.getProductById("weidian." + item.itemId);
             if (null != prd) {
-                month += prd.getLimitInMonth();
+                month += prd.getLimitInMonth() * Integer.valueOf(item.quantity);
             }
         }
         return month;
     }
 
+    @Async
     @Transactional(transactionManager = "eVpnTransactionManager", rollbackFor = {Exception.class})
     public void orderCallback(String contentStr) throws Exception {
         WeidianPushContent content = objectMapper.readValue(contentStr, WeidianPushContent.class);

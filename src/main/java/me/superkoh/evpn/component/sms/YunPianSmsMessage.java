@@ -8,6 +8,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 
 /**
@@ -26,12 +27,17 @@ public class YunPianSmsMessage implements SmsMessage {
 
     public YunPianSmsMessage(String apiKey) {
         this.apiKey = apiKey;
-        this.restTemplate = new RestTemplate();
     }
 
-    public YunPianSmsMessage(String apiKey, RestTemplate restTemplate) {
-        this.apiKey = apiKey;
+    public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    @PostConstruct
+    private void init() {
+        if (null == this.restTemplate) {
+            this.restTemplate = new RestTemplate();
+        }
     }
 
     @Override

@@ -18,7 +18,8 @@ public class YunpianSmsMessageConfiguration {
 
     @Bean
     public SmsMessage smsMessage(RestTemplate restTemplate) {
-        YunPianSmsMessage smsMessage = new YunPianSmsMessage(smsMessageProperties.getApikey(), restTemplate);
+        YunPianSmsMessage smsMessage = new YunPianSmsMessage(smsMessageProperties.getApikey());
+        smsMessage.setRestTemplate(restTemplate);
         return smsMessage;
     }
 }

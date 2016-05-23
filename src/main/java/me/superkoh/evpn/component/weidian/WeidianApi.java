@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,6 +34,17 @@ public class WeidianApi {
         this.appkey = appkey;
         this.secret = secret;
     }
+
+    @PostConstruct
+    private void init() {
+        if (null == restTemplate) {
+            restTemplate = new RestTemplate();
+        }
+        if (null == objectMapper) {
+            objectMapper = new ObjectMapper();
+        }
+    }
+
 
     public WeidianTokenResult getAccessToken() throws IOException {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -65,7 +77,7 @@ public class WeidianApi {
         try {
             UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(baseUrl).queryParams(params).build();
             logger.info(uriComponents.toUriString());
-            ResponseEntity<String> responseEntity = getRestTemplate().exchange(uriComponents.toUriString(),
+            ResponseEntity<String> responseEntity = restTemplate.exchange(uriComponents.toUriString(),
                     HttpMethod.GET, null, String.class, uriVariables);
             return this.getResponse(responseEntity, type);
         } catch (HttpClientErrorException e) {
@@ -83,7 +95,7 @@ public class WeidianApi {
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-            ResponseEntity<String> responseEntity = getRestTemplate().exchange(url, HttpMethod.POST, httpEntity,
+            ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity,
                     String.class);
             return this.getResponse(responseEntity, type);
         } catch (BizException e) {
@@ -100,7 +112,7 @@ public class WeidianApi {
     private <T> T getResponse(ResponseEntity<String> responseEntity, Class<T> type) throws IOException {
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             logger.info(responseEntity.getBody());
-            WeidianResponse response = (WeidianResponse) getObjectMapper().readValue(responseEntity.getBody(), type);
+            WeidianResponse response = (WeidianResponse) objectMapper.readValue(responseEntity.getBody(), type);
             if (response.status.status_code == 0) {
                 return (T) response;
             } else {
@@ -114,18 +126,8 @@ public class WeidianApi {
         }
     }
 
-    private RestTemplate getRestTemplate() {
-        if (null == restTemplate) restTemplate = new RestTemplate();
-        return restTemplate;
-    }
-
     void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-    }
-
-    private ObjectMapper getObjectMapper() {
-        if (null == objectMapper) objectMapper = new ObjectMapper();
-        return objectMapper;
     }
 
     void setObjectMapper(ObjectMapper objectMapper) {

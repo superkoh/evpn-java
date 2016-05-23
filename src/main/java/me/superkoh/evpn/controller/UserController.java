@@ -59,8 +59,7 @@ public class UserController {
             .APPLICATION_JSON_UTF8_VALUE}, consumes = {MediaType.ALL_VALUE})
     public VipUserInfoResponse loginWithMobile(@ApiParam(value = "手机号", required = true) @RequestParam String mobile,
                                                @ApiParam(value = "验证码", required = true) @RequestParam String code,
-                                               HttpServletRequest request) throws
-            Exception {
+                                               HttpServletRequest request) throws Exception {
         if (mobile.isEmpty()) {
             throw new IllegalRequestParamException("mobile");
         }

@@ -53,7 +53,7 @@
         <table tableName="product" domainObjectName="Product" >
         </table>
 
-        <table tableName="order" domainObjectName="Order" >
+        <table tableName="order_info" domainObjectName="Order" >
         </table>
 
     </context>

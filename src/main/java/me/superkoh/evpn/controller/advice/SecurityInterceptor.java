@@ -21,7 +21,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
             response.sendError(403, "Permission Denied: auth");
             return false;
         }
-        String vd = request.getHeader("X-EVpn-Auth");
+        String vd = request.getHeader("X-EVpn-Device");
         if (null == vd) vd = request.getParameter("vd");
         if (null == vd) {
             response.sendError(403, "Permission Denied: vd");

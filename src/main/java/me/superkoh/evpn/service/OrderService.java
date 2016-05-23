@@ -97,12 +97,12 @@ public class OrderService {
         if (null == order) {
             isNew = true;
             order = new Order();
+            order.setDeliver(0);
         }
         order.setId(orderId);
         order.setContent(objectMapper.writeValueAsString(content));
         order.setTotalPrice((int) (Double.parseDouble(content.message.price) * 100));
         order.setStatus(content.message.status);
-        order.setDeliver(0);
         switch (content.type) {
             case "weidian.order.already_payment":
                 order.setDeliver(1);

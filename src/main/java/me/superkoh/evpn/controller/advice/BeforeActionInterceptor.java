@@ -30,7 +30,7 @@ public class BeforeActionInterceptor extends HandlerInterceptorAdapter {
         addLogKV(accessLogBuilder, "params", parseParams(request.getParameterMap()));
         ApplicationContext ctx = ApplicationContextUtil.getApplicationContext();
         UserService userService = (UserService) ctx.getBean("userService");
-        String userToken = request.getHeader("eToken");
+        String userToken = request.getHeader("X-EVpn-Auth-Token");
         if (null != userToken) {
             VipUser user = userService.getVipUserByToken(userToken);
             if (null != user) {

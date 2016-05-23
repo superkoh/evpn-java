@@ -15,18 +15,19 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
             Exception {
-        String eAuth = request.getHeader("eAuth");
+        String eAuth = request.getHeader("X-EVpn-Auth");
+        if (null == eAuth) eAuth = request.getHeader("eAuth");
         if (null == eAuth || !eAuth.equals(E_AUTH)) {
             response.sendError(403, "Permission Denied: auth");
             return false;
         }
-        String vd = request.getHeader("evpn-vd");
+        String vd = request.getHeader("X-EVpn-Auth");
         if (null == vd) vd = request.getParameter("vd");
         if (null == vd) {
             response.sendError(403, "Permission Denied: vd");
             return false;
         }
-        String v = request.getHeader("evpn-v");
+        String v = request.getHeader("X-EVpn-Version");
         if (null == v) v = request.getParameter("v");
         if (null == v) {
             response.sendError(403, "Permission Denied: v");

@@ -5,6 +5,7 @@ import me.superkoh.evpn.component.weidian.WeidianApi;
 import me.superkoh.evpn.component.weidian.entity.Item;
 import me.superkoh.evpn.component.weidian.entity.OrderInfo;
 import me.superkoh.evpn.component.weidian.entity.WeidianPushContent;
+import me.superkoh.evpn.component.weidian.entity.WeidianTokenResult;
 import me.superkoh.evpn.domain.mapper.evpn.OrderMapper;
 import me.superkoh.evpn.domain.mapper.evpn.ProductMapper;
 import me.superkoh.evpn.domain.model.evpn.Order;
@@ -48,9 +49,10 @@ public class OrderService {
         String key = "weidian_access_token";
         String accessToken = jedis.get(key);
         if (null == accessToken) {
-            accessToken = weidianApi.getAccessToken().access_token;
+            WeidianTokenResult tokenResult = weidianApi.getAccessToken();
+            accessToken = tokenResult.access_token;
             jedis.set(key, accessToken);
-            jedis.expire(key, weidianApi.getAccessToken().expires_in - 300);
+            jedis.expire(key, tokenResult.expires_in - 300);
         }
         return accessToken;
     }
